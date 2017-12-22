@@ -50,7 +50,7 @@ public class CompetitionActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mApiService= FootballService.getInstance();
-        mCompetitionId=getIntent().getIntExtra("competitionId",-1);
+        mCompetitionId=getIntent().getIntExtra("competitionID",-1);
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),mCompetitionId);
 
          // Set up the ViewPager with the sections adapter.
@@ -145,6 +145,7 @@ public class CompetitionActivity extends AppCompatActivity {
         private void loadLeagueTable()
         {
             int competitionId= getArguments().getInt(ARG_COMPETITION_ID);
+            Log.d("Competition ID",String.valueOf(competitionId));
             Call<LeagueTable> leagueTableCall=  FootballService.getInstance().getLeagueTable(competitionId);
             leagueTableCall.enqueue(new Callback<LeagueTable>() {
                 @Override
@@ -153,13 +154,18 @@ public class CompetitionActivity extends AppCompatActivity {
                     {
                         leagueTable=response.body();
                         tableRecyclerAdapter.setStandingTeams(leagueTable.getStanding());
+                        Log.d("LoadLeagueTable","Successfull");
                         // leaguetable shi daamate Statndingteam masivi
+                    }
+                    else
+                    {
+                        Log.d("LoadLeagueTable","Unsuccessfull");
                     }
                 }
 
                 @Override
                 public void onFailure(Call<LeagueTable> call, Throwable t) {
-
+                    Log.d("LoadLeagueTable","Failure");
                 }
             });
 
