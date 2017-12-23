@@ -6,6 +6,38 @@ package com.example.zakro.footballscores.Models;
 
 public class FixturesOfCompetition
 {
+    public String getSeason() {
+        return season;
+    }
+
+    public void setSeason(String season) {
+        this.season = season;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public Fixture[] getFixtures() {
+        return fixtures;
+    }
+
+    public void setFixtures(Fixture[] fixtures) {
+        this.fixtures = fixtures;
+    }
+
+    public LinksProvider get_links() {
+        return _links;
+    }
+
+    public void set_links(LinksProvider _links) {
+        this._links = _links;
+    }
+
     private String season;
     private int count;
     private Fixture[] fixtures;

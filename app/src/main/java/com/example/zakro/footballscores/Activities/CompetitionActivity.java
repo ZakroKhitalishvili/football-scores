@@ -18,7 +18,9 @@ import android.view.ViewGroup;
 
 import com.example.zakro.footballscores.API.FootballAPIService;
 import com.example.zakro.footballscores.API.FootballService;
+import com.example.zakro.footballscores.Adapters.LeagueFixturesRecyclerViewAdapter;
 import com.example.zakro.footballscores.Adapters.LeagueTableRecyclerViewAdapter;
+import com.example.zakro.footballscores.Models.Fixture;
 import com.example.zakro.footballscores.Models.FixturesOfCompetition;
 import com.example.zakro.footballscores.Models.LeagueTable;
 import com.example.zakro.footballscores.R;
@@ -123,12 +125,6 @@ public class CompetitionActivity extends AppCompatActivity {
             return rootView;
         }
 
-        @Override
-        public void onActivityCreated(Bundle bundle)
-        {
-            super.onActivityCreated(bundle);
-
-        }
 
 
 
@@ -145,7 +141,6 @@ public class CompetitionActivity extends AppCompatActivity {
         private void loadLeagueTable()
         {
             int competitionId= getArguments().getInt(ARG_COMPETITION_ID);
-            Log.d("Competition ID",String.valueOf(competitionId));
             Call<LeagueTable> leagueTableCall=  FootballService.getInstance().getLeagueTable(competitionId);
             leagueTableCall.enqueue(new Callback<LeagueTable>() {
                 @Override
@@ -154,10 +149,10 @@ public class CompetitionActivity extends AppCompatActivity {
                     {
                         leagueTable=response.body();
                         tableRecyclerAdapter.setStandingTeams(leagueTable.getStanding());
-                        Log.d("LoadLeagueTable","Successfull");
+                        recyclerView.setAdapter(tableRecyclerAdapter);
                         // leaguetable shi daamate Statndingteam masivi
                     }
-                    else
+                    else                        Log.d("LoadLeagueTable","Successfull");
                     {
                         Log.d("LoadLeagueTable","Unsuccessfull");
                     }
@@ -169,7 +164,7 @@ public class CompetitionActivity extends AppCompatActivity {
                 }
             });
 
-            recyclerView.setAdapter(tableRecyclerAdapter);
+
         }
     }
 
@@ -178,6 +173,8 @@ public class CompetitionActivity extends AppCompatActivity {
         private static final String ARG_SECTION_NUMBER = "section_number";
         private static final String ARG_COMPETITION_ID="competition_id";
         private FixturesOfCompetition fixturesOfCompetition;
+        private RecyclerView recyclerView;
+        private LeagueFixturesRecyclerViewAdapter fixturesRecyclerViewAdapter;
 
         public FixturesFragment() {
         }
@@ -196,8 +193,49 @@ public class CompetitionActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_competition_fixtures_layout, container, false);
+            recyclerView=rootView.findViewById(R.id.competitionFixturesRecycler);
+
+            init();
+            loadFixtures();
 
             return rootView;
+        }
+
+
+        private void init()
+        {
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getBaseContext()));
+            fixturesRecyclerViewAdapter=new LeagueFixturesRecyclerViewAdapter();
+            fixturesRecyclerViewAdapter.setFixtures(new Fixture[0]);
+            recyclerView.setAdapter(fixturesRecyclerViewAdapter);
+            recyclerView.setHasFixedSize(true);
+        }
+
+
+        private void loadFixtures()
+        {
+            int competitionId=getArguments().getInt(ARG_COMPETITION_ID);
+            final Call<FixturesOfCompetition> fixturesCall=FootballService.getInstance().getFixturesOfCompetition(competitionId);
+            fixturesCall.enqueue(new Callback<FixturesOfCompetition>() {
+                @Override
+                public void onResponse(Call<FixturesOfCompetition> call, Response<FixturesOfCompetition> response) {
+                    if(response.isSuccessful())
+                    {
+                        fixturesRecyclerViewAdapter.setFixtures(response.body().getFixtures());
+                        recyclerView.setAdapter(fixturesRecyclerViewAdapter);
+                    }
+                    else
+                    {
+                        Log.d("FixturesCall","Unsuccessfull");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<FixturesOfCompetition> call, Throwable t) {
+                    Log.d("FixturesCall","Failure");
+
+                }
+            });
         }
     }
 

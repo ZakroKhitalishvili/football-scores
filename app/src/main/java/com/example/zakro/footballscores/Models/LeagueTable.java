@@ -37,24 +37,24 @@ public class LeagueTable
 
     public class StandingTeam
     {
-        private int rank;
-        private String team;
+        private int position;
+        private String teamName;
         private int teamId;
 
-        public int getRank() {
-            return rank;
+        public int getPosition() {
+            return position;
         }
 
-        public void setRank(int rank) {
-            this.rank = rank;
+        public void setPosition(int rank) {
+            this.position = rank;
         }
 
-        public String getTeam() {
-            return team;
+        public String getTeamName() {
+            return teamName;
         }
 
-        public void setTeam(String team) {
-            this.team = team;
+        public void setTeamName(String team) {
+            this.teamName = team;
         }
 
         public int getTeamId() {

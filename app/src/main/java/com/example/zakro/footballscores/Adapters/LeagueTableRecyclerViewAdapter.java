@@ -2,14 +2,18 @@ package com.example.zakro.footballscores.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.zakro.footballscores.Models.LeagueTable;
 import com.example.zakro.footballscores.R;
+import com.example.zakro.footballscores.Svg.Svger;
+import com.pixplicity.sharp.Sharp;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -34,7 +38,7 @@ public class LeagueTableRecyclerViewAdapter extends RecyclerView.Adapter<LeagueT
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate( R.layout.league_standing_team_layout,parent);
+        View view= LayoutInflater.from(parent.getContext()).inflate( R.layout.league_standing_team_layout,parent,false);
         ViewHolder vh=new ViewHolder(view);
         return vh;
     }
@@ -42,14 +46,26 @@ public class LeagueTableRecyclerViewAdapter extends RecyclerView.Adapter<LeagueT
     @Override
     public void onBindViewHolder(ViewHolder holder, int position)
     {
-        holder.rank.setText(standingTeams[position].getRank());
-        Picasso.with(holder.viewItem.getContext()).load(standingTeams[position].getCrestURI()).into(holder.crest);
-        holder.team.setText(standingTeams[position].getTeam());
-        holder.games.setText(standingTeams[position].getPlayedGames());
-        holder.goals.setText(standingTeams[position].getGoals());
-        holder.goalsAgainst.setText(standingTeams[position].getGoalsAgainst());
-        holder.goalsDifference.setText(standingTeams[position].getGoalDifference());
-        holder.points.setText(standingTeams[position].getPoints());
+        holder.rank.setText(String.valueOf(standingTeams[position].getPosition()));
+        if(standingTeams[position].getCrestURI()!=null) {
+            if (!standingTeams[position].getCrestURI().isEmpty()) {
+
+                if(standingTeams[position].getCrestURI().endsWith(".svg"))
+                {
+                    //Svger.with(holder.viewItem.getContext()).load(standingTeams[position].getCrestURI()).into(holder.crest);
+                }
+                else {
+                    Glide.with(holder.viewItem.getContext()).load(standingTeams[position].getCrestURI()).into(holder.crest);
+                }
+
+            }
+        }
+        holder.team.setText(standingTeams[position].getTeamName());
+        holder.games.setText(String.valueOf(standingTeams[position].getPlayedGames()));
+        holder.goals.setText(String.valueOf(standingTeams[position].getGoals()));
+        holder.goalsAgainst.setText(String.valueOf(standingTeams[position].getGoalsAgainst()));
+        holder.goalsDifference.setText(String.valueOf(standingTeams[position].getGoalDifference()));
+        holder.points.setText(String.valueOf(standingTeams[position].getPoints()));
     }
 
     @Override

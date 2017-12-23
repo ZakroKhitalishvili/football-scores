@@ -29,7 +29,7 @@ public class CompetitionsRecyclerViewAdapter extends RecyclerView.Adapter<Compet
         holder.competitionName.setText(competitions[position].getLeague());
         holder.competitionCaption.setText(competitions[position].getCaption());
         holder.competitionYear.setText(competitions[position].getYear());
-        holder.competitionLastUpdate.setText(String.format("%1$td-%1$tm %1$tH:%1$tM",competitions[position].getLastUpdated()));
+        holder.competitionLastUpdate.setText(DateToSimpleString.convert(competitions[position].getLastUpdated()));
     }
 
     @Override
