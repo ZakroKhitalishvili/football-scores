@@ -1,6 +1,7 @@
 package com.example.zakro.footballscores.Activities;
 
 import android.annotation.SuppressLint;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,8 +14,11 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.zakro.footballscores.API.FootballAPIService;
 import com.example.zakro.footballscores.API.FootballService;
@@ -69,27 +73,33 @@ public class CompetitionActivity extends AppCompatActivity {
         return true;
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_competition, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_competition, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_matchday)
+        {
+//            DialogFragment matchDaySetDialog=new DialogFragment();
+//            matchDaySetDialog.onAttach(getBaseContext());
+//            matchDaySetDialog.setCancelable(true);
+//            matchDaySetDialog.setHasOptionsMenu(true);
+//            matchDaySetDialog.setShowsDialog(true);
+            Toast.makeText(getApplicationContext(),"Item clicked",Toast.LENGTH_LONG).show();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
 
     public static class LeagueTableFragment extends Fragment {
