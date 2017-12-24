@@ -10,10 +10,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.caverock.androidsvg.SVGImageView;
 import com.example.zakro.footballscores.Models.LeagueTable;
 import com.example.zakro.footballscores.R;
-import com.example.zakro.footballscores.Svg.Svger;
-import com.pixplicity.sharp.Sharp;
+import com.example.zakro.footballscores.Svg.SvgView;
+
+
 import com.squareup.picasso.Picasso;
 
 /**
@@ -52,10 +54,11 @@ public class LeagueTableRecyclerViewAdapter extends RecyclerView.Adapter<LeagueT
 
                 if(standingTeams[position].getCrestURI().endsWith(".svg"))
                 {
+                    SvgView.initSvgView(holder.viewItem.getContext(),holder.crest,standingTeams[position].getCrestURI());
                     //Svger.with(holder.viewItem.getContext()).load(standingTeams[position].getCrestURI()).into(holder.crest);
                 }
                 else {
-                    Glide.with(holder.viewItem.getContext()).load(standingTeams[position].getCrestURI()).into(holder.crest);
+                   // Glide.with(holder.viewItem.getContext()).load(standingTeams[position].getCrestURI()).into(holder.crest);
                 }
 
             }
@@ -76,7 +79,7 @@ public class LeagueTableRecyclerViewAdapter extends RecyclerView.Adapter<LeagueT
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
         public TextView rank;
-        public ImageView crest;
+        public SVGImageView crest;
         public TextView team;
         public TextView games;
         public TextView goals;
@@ -91,7 +94,7 @@ public class LeagueTableRecyclerViewAdapter extends RecyclerView.Adapter<LeagueT
 
             this.viewItem=itemView;
             rank=itemView.findViewById(R.id.standingTeamRank);
-            crest=itemView.findViewById(R.id.standingTeamCrest);
+            crest=(SVGImageView) itemView.findViewById(R.id.standingTeamCrest);
             team=itemView.findViewById(R.id.standingTeamName);
             games=itemView.findViewById(R.id.standingTeamPlayedGames);
             goals=itemView.findViewById(R.id.standingTeamGoals);
