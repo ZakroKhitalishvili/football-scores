@@ -1,7 +1,9 @@
 package com.example.zakro.footballscores.Activities;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +20,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.zakro.footballscores.API.FootballAPIService;
@@ -37,12 +41,13 @@ public class CompetitionActivity extends AppCompatActivity {
 
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
-
     private ViewPager mViewPager;
-
     protected FootballAPIService mApiService;
-
     private int mCompetitionId;
+    private AlertDialog matchdayDialog;
+    private TextView mTableTab;
+    private TextView mFixturesTab;
+    EditText editText;
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -51,6 +56,8 @@ public class CompetitionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_competition);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mTableTab = findViewById(R.id.leagueTableTabName);
+        mFixturesTab = findViewById(R.id.fixturesTabName);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -58,13 +65,71 @@ public class CompetitionActivity extends AppCompatActivity {
         mApiService= FootballService.getInstance();
         mCompetitionId=getIntent().getIntExtra("competitionID",-1);
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),mCompetitionId);
-
+        editText=new EditText(this);
          // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
+            {}
+            @Override
+            public void onPageSelected(int position) {
+                if(position==0)
+                {
+                    mTableTab.setBackgroundResource(R.color.colorAppPrimaryShade1);
+                    mFixturesTab.setBackgroundResource(R.color.colorAppPrimaryShade4);
+                }
+                if(position==1) {
+                    mFixturesTab.setBackgroundResource(R.color.colorAppPrimaryShade1);
+                    mTableTab.setBackgroundResource(R.color.colorAppPrimaryShade4);
 
+                }
+            }
+            @Override
+            public void onPageScrollStateChanged(int state)
+            {}
+        });
 
+        initMatchdayDialog();
 
+    }
+
+    private void initMatchdayDialog()
+    {
+        matchdayDialog=new AlertDialog.Builder(this)
+                .setTitle("Select Match day")
+                .setView(editText)
+                .setPositiveButton("Submit", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        FixturesFragment frag= (FixturesFragment)getSupportFragmentManager()
+                                .findFragmentByTag("android:switcher:"+R.id.container+":1");
+                        String input=editText.getText().toString();
+                        if(input!=null)
+                        {
+
+                            input=input.trim();
+
+                            if(!input.isEmpty() && input.matches("^[0-9]*$"))
+                            {
+                                frag.loadFixtures(5);
+                            }
+                            else
+                            {
+                                Toast.makeText(getBaseContext(),"Invalid Input",Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ((AlertDialog)dialog).cancel();
+                    }
+                })
+                .create();
     }
     @Override
     public boolean onSupportNavigateUp()
@@ -90,12 +155,8 @@ public class CompetitionActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_matchday)
         {
-//            DialogFragment matchDaySetDialog=new DialogFragment();
-//            matchDaySetDialog.onAttach(getBaseContext());
-//            matchDaySetDialog.setCancelable(true);
-//            matchDaySetDialog.setHasOptionsMenu(true);
-//            matchDaySetDialog.setShowsDialog(true);
-            Toast.makeText(getApplicationContext(),"Item clicked",Toast.LENGTH_LONG).show();
+            matchdayDialog.show();
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -148,6 +209,7 @@ public class CompetitionActivity extends AppCompatActivity {
             recyclerView.setAdapter(tableRecyclerAdapter);
         }
 
+        @SuppressLint("RestrictedApi")
         private void loadLeagueTable()
         {
             int competitionId= getArguments().getInt(ARG_COMPETITION_ID);
@@ -206,7 +268,7 @@ public class CompetitionActivity extends AppCompatActivity {
             recyclerView=rootView.findViewById(R.id.competitionFixturesRecycler);
 
             init();
-            loadFixtures();
+            loadFixtures(1);
 
             return rootView;
         }
@@ -222,16 +284,25 @@ public class CompetitionActivity extends AppCompatActivity {
         }
 
 
-        private void loadFixtures()
+        private void loadFixtures(int matchDay)
         {
             int competitionId=getArguments().getInt(ARG_COMPETITION_ID);
-            final Call<FixturesOfCompetition> fixturesCall=FootballService.getInstance().getFixturesOfCompetition(competitionId);
+            final Call<FixturesOfCompetition> fixturesCall=FootballService.getInstance().getFixturesOfCompetition(competitionId,matchDay);
             fixturesCall.enqueue(new Callback<FixturesOfCompetition>() {
                 @Override
                 public void onResponse(Call<FixturesOfCompetition> call, Response<FixturesOfCompetition> response) {
                     if(response.isSuccessful())
                     {
-                        fixturesRecyclerViewAdapter.setFixtures(response.body().getFixtures());
+                        if(response.body()!=null) {
+                            if (response.body().getFixtures() != null) {
+                                fixturesRecyclerViewAdapter.setFixtures(response.body().getFixtures());
+                            } else {
+                                fixturesRecyclerViewAdapter.setFixtures(new Fixture[0]);
+                            }
+                        }
+                        else {
+                            fixturesRecyclerViewAdapter.setFixtures(new Fixture[0]);
+                        }
                         recyclerView.setAdapter(fixturesRecyclerViewAdapter);
                     }
                     else
@@ -263,10 +334,12 @@ public class CompetitionActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
 
-            if(position==0)
+            if(position==0) {
                 return LeagueTableFragment.newInstance(competitionId);
-            if(position==1)
-                return  FixturesFragment.newInstance(competitionId);
+            }
+            if(position==1) {
+                return FixturesFragment.newInstance(competitionId);
+            }
             return null;
         }
 
@@ -274,5 +347,6 @@ public class CompetitionActivity extends AppCompatActivity {
         public int getCount() {
             return 2;
         }
+
     }
 }

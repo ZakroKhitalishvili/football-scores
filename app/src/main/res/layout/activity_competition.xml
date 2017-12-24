@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context="com.example.zakro.footballscores.Activities.CompetitionActivity">
+
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -29,18 +31,39 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp">
+        <TextView
+            android:id="@+id/leagueTableTabName"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Table"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:background="@color/colorAppPrimaryShade1"
+            android:textColor="@color/colorAppSecondary1Shade1"
+            android:textStyle="bold"
+            />
+        <TextView
+            android:id="@+id/fixturesTabName"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Fixtures"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:background="@color/colorAppPrimaryShade4"
+            android:textColor="@color/colorAppSecondary1Shade1"
+            android:textStyle="bold"
+            />
+    </LinearLayout>
     <android.support.v4.view.ViewPager
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:background="@color/colorAppPrimaryShade1"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
-
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

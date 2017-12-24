@@ -54,11 +54,11 @@ public class LeagueTableRecyclerViewAdapter extends RecyclerView.Adapter<LeagueT
 
                 if(standingTeams[position].getCrestURI().endsWith(".svg"))
                 {
-                    SvgView.initSvgView(holder.viewItem.getContext(),holder.crest,standingTeams[position].getCrestURI());
+                    //SvgView.initSvgView(holder.viewItem.getContext(),holder.crest,standingTeams[position].getCrestURI());
                     //Svger.with(holder.viewItem.getContext()).load(standingTeams[position].getCrestURI()).into(holder.crest);
                 }
                 else {
-                   // Glide.with(holder.viewItem.getContext()).load(standingTeams[position].getCrestURI()).into(holder.crest);
+                    Glide.with(holder.viewItem.getContext()).load(standingTeams[position].getCrestURI()).into(holder.crest);
                 }
 
             }
@@ -79,7 +79,7 @@ public class LeagueTableRecyclerViewAdapter extends RecyclerView.Adapter<LeagueT
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
         public TextView rank;
-        public SVGImageView crest;
+        public ImageView crest;
         public TextView team;
         public TextView games;
         public TextView goals;
@@ -94,7 +94,7 @@ public class LeagueTableRecyclerViewAdapter extends RecyclerView.Adapter<LeagueT
 
             this.viewItem=itemView;
             rank=itemView.findViewById(R.id.standingTeamRank);
-            crest=(SVGImageView) itemView.findViewById(R.id.standingTeamCrest);
+            crest=itemView.findViewById(R.id.standingTeamCrest);
             team=itemView.findViewById(R.id.standingTeamName);
             games=itemView.findViewById(R.id.standingTeamPlayedGames);
             goals=itemView.findViewById(R.id.standingTeamGoals);

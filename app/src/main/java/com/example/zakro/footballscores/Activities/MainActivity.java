@@ -65,8 +65,7 @@ public class MainActivity extends AppCompatActivity {
                         new RecyclerItemClickListener() {
                             @Override
                             public void onClick(View v, int position) {
-                                Toast.makeText(MainActivity.this,"Touched Competition "+ mCompetitions[position].getCaption(),Toast.LENGTH_LONG).show();
-                                Log.d("Touched Competition", mCompetitions[position].getCaption());
+
                                 Intent intent=new Intent(MainActivity.this,CompetitionActivity.class);
                                 intent.putExtra("competitionID",mCompetitions[position].getId());
                                 startActivityForResult(intent,0);
