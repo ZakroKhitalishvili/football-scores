@@ -16,7 +16,6 @@ import retrofit2.http.Query;
 
 public interface FootballAPIService
 {
-    @Headers("X-Auth-Token:ef3992fae68842f78752de600842f8b2")
 
     @GET("competitions")
     Call<Competition[]> getCompetitions();
