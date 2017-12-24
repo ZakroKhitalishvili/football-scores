@@ -106,6 +106,7 @@ public class CompetitionActivity extends AppCompatActivity {
                     {
                         FixturesFragment frag= (FixturesFragment)getSupportFragmentManager()
                                 .findFragmentByTag("android:switcher:"+R.id.container+":1");
+
                         String input=editText.getText().toString();
                         if(input!=null)
                         {
@@ -114,11 +115,20 @@ public class CompetitionActivity extends AppCompatActivity {
 
                             if(!input.isEmpty() && input.matches("^[0-9]*$"))
                             {
-                                frag.loadFixtures(5);
+                                int inputNum=Integer.parseInt(input);
+                                if(inputNum>(LeagueTableFragment.teamsCount-1)*2 || inputNum==0)
+                                {
+                                    Toast.makeText(getApplicationContext(),"Invalid number: out of a range",Toast.LENGTH_LONG).show();
+                                    editText.setText("");
+                                }
+                                else {
+                                    frag.loadFixtures(inputNum);
+                                }
                             }
                             else
                             {
                                 Toast.makeText(getBaseContext(),"Invalid Input",Toast.LENGTH_LONG).show();
+                                editText.setText("");
                             }
                         }
                     }
@@ -170,6 +180,7 @@ public class CompetitionActivity extends AppCompatActivity {
         private LeagueTable leagueTable;
         private RecyclerView recyclerView;
         private LeagueTableRecyclerViewAdapter tableRecyclerAdapter;
+        static public int teamsCount;
 
         public LeagueTableFragment() {
 
@@ -196,9 +207,6 @@ public class CompetitionActivity extends AppCompatActivity {
             return rootView;
         }
 
-
-
-
         private void init()
         {
 
@@ -213,18 +221,21 @@ public class CompetitionActivity extends AppCompatActivity {
         private void loadLeagueTable()
         {
             int competitionId= getArguments().getInt(ARG_COMPETITION_ID);
-            Call<LeagueTable> leagueTableCall=  FootballService.getInstance().getLeagueTable(competitionId);
+            final Call<LeagueTable> leagueTableCall=  FootballService.getInstance().getLeagueTable(competitionId);
+            leagueTableCall.request().headers().newBuilder().add("X-Auth-Token","ef3992fae68842f78752de600842f8b2");
             leagueTableCall.enqueue(new Callback<LeagueTable>() {
                 @Override
                 public void onResponse(Call<LeagueTable> call, Response<LeagueTable> response) {
                     if(response.isSuccessful())
                     {
                         leagueTable=response.body();
+                        teamsCount=leagueTable.getStanding().length;
                         tableRecyclerAdapter.setStandingTeams(leagueTable.getStanding());
                         recyclerView.setAdapter(tableRecyclerAdapter);
+                        Log.d("LoadLeagueTable","Successfull");
                         // leaguetable shi daamate Statndingteam masivi
                     }
-                    else                        Log.d("LoadLeagueTable","Successfull");
+                    else
                     {
                         Log.d("LoadLeagueTable","Unsuccessfull");
                     }
@@ -273,7 +284,6 @@ public class CompetitionActivity extends AppCompatActivity {
             return rootView;
         }
 
-
         private void init()
         {
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getBaseContext()));
@@ -282,7 +292,6 @@ public class CompetitionActivity extends AppCompatActivity {
             recyclerView.setAdapter(fixturesRecyclerViewAdapter);
             recyclerView.setHasFixedSize(true);
         }
-
 
         private void loadFixtures(int matchDay)
         {
@@ -296,6 +305,7 @@ public class CompetitionActivity extends AppCompatActivity {
                         if(response.body()!=null) {
                             if (response.body().getFixtures() != null) {
                                 fixturesRecyclerViewAdapter.setFixtures(response.body().getFixtures());
+
                             } else {
                                 fixturesRecyclerViewAdapter.setFixtures(new Fixture[0]);
                             }
@@ -319,8 +329,6 @@ public class CompetitionActivity extends AppCompatActivity {
             });
         }
     }
-
-
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
         private FragmentManager fragmentManager;
