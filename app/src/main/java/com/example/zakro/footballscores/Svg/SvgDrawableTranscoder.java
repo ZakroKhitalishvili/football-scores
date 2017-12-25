@@ -21,6 +21,6 @@ public class SvgDrawableTranscoder implements ResourceTranscoder<SVG, PictureDra
 
     @Override
     public String getId() {
-        return null;
+        return "";
     }
 }

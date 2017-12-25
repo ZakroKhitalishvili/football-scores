@@ -26,7 +26,6 @@ public class LeagueFixturesRecyclerViewAdapter extends RecyclerView.Adapter<Leag
         return vh;
     }
 
-
     private Fixture[] fixtures;
 
     public void setFixtures(Fixture[] fixtures)
@@ -50,7 +49,6 @@ public class LeagueFixturesRecyclerViewAdapter extends RecyclerView.Adapter<Leag
                 holder.awayTeamGoals.setText("-");
             }
         }
-
     }
 
     @Override

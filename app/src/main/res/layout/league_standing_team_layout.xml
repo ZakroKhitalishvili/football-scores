@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
+    android:id="@+id/standingTeam"
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:background="@color/colorAppSecondary1Shade1"
@@ -17,14 +17,14 @@
         android:padding="1dp"
         android:gravity="center"
         android:textColor="@color/colorAppSecondary2Shade2"/>
-    <ImageView
+    <!--<ImageView
 
         android:id="@+id/standingTeamCrest"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"
         android:layerType="software"
-        />
+        /> -->
     <TextView
         android:id="@+id/standingTeamName"
         android:layout_width="0dp"
@@ -87,3 +87,4 @@
         android:textColor="@color/colorAppSecondary2Shade2"/>
 
 </LinearLayout>
+
